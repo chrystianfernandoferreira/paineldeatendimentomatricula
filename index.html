@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Painel ETEC - Proporção Otimizada</title>
+    <title>Painel ETEC - Proporção 8% Rodapé</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
         
@@ -21,13 +21,13 @@
             background: linear-gradient(145deg, #7f1d1d, #111827);
         }
 
-        /* HEADER: Ajustado para 50% da altura da tela */
+        /* HEADER: Mantido em 50% para destaque da senha */
         .header { 
             height: 50vh;
             background: rgba(153, 27, 27, 0.9);
             text-align: center; 
             display: flex; flex-direction: column; justify-content: center;
-            padding: 1.5vh; 
+            padding: 1vh; 
             border-bottom: 0.6vh solid #fde047; 
         }
 
@@ -49,9 +49,9 @@
             font-weight: 800; text-transform: uppercase;
         }
 
-        /* CONTEÚDO (RETÂNGULOS): Aumentado para 25% da altura da tela */
+        /* CONTEÚDO (RETÂNGULOS): Aumentado para 32% (compensação do rodapé) */
         .content { 
-            height: 25vh;
+            height: 32vh;
             display: flex; gap: 1.5vw; padding: 1.5vh; 
         }
 
@@ -59,15 +59,16 @@
             flex: 1; background: #f3f4f6; color: #000; border-radius: 1.5vh; 
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
             padding: 1vh;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
         .info { 
-            font-size: 3.2vh; 
+            font-size: 4vh; /* Texto interno dos retângulos ficou maior */
             font-weight: 700; 
         }
         .info strong { color: #991b1b; }
 
-        /* CONTROLES (BOTÕES): Diminuído para 10% da altura da tela */
+        /* CONTROLES: Mantidos em 10% */
         .controls { 
             height: 10vh;
             background: #020617; 
@@ -81,34 +82,31 @@
             cursor: pointer; font-weight: bold; 
             flex: 1;
             display: flex; align-items: center; justify-content: center;
-            transition: transform 0.1s;
         }
-        button:active { transform: scale(0.97); }
 
         .doc { background: #dc2626; color: #fff; }
         .mat { background: #374151; color: #fff; }
         .reset { background: #eab308; color: #000; }
 
-        /* RODAPÉ: Mantido em 15% (ou o restante disponível) para garantir visibilidade */
+        /* RODAPÉ: Reduzido para 8% e em linha única */
         .footer { 
-            height: 15vh;
+            height: 8vh;
             background: #000; text-align: center; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             font-weight: 700; 
-            font-size: 2vh; 
+            font-size: 1.8vh; 
             color: rgba(255,255,255,0.8);
-            border-top: 2px solid #1e293b;
+            border-top: 1px solid #1e293b;
             padding: 0 2vw;
+            white-space: nowrap;
         }
 
-        /* RESPONSIVIDADE SMARTPHONE (PORTRAIT) */
         @media (max-width: 600px) and (orientation: portrait) {
-            .header { height: 40vh; }
+            .header { height: 42vh; }
             .senha-principal { font-size: 22vh; }
-            .content { height: 35vh; flex-direction: column; }
-            .controls { height: 12vh; gap: 1vh; }
-            button { font-size: 1.8vh; }
-            .footer { height: 13vh; font-size: 1.6vh; }
+            .content { height: 38vh; flex-direction: column; }
+            .controls { height: 12vh; }
+            .footer { height: 8vh; font-size: 1.4vh; white-space: normal; }
         }
 
         .piscar { animation: flash 0.5s ease-in-out 3; }
@@ -147,14 +145,14 @@
     </div>
     
     <div class="footer">
-        <div>Etec Sylvio de Mattos Carvalho</div>
-        <div style="font-size: 0.8em; opacity: 0.7;">Centro Paula Souza</div>
+        Etec Sylvio de Mattos Carvalho • Centro Paula Souza
     </div>
 </div>
 
 <audio id="tindon" src="https://actions.google.com/sounds/v1/alarms/airport_chime.ogg" preload="auto"></audio>
 
 <script type="module">
+    // ... O código JavaScript (Firebase) permanece idêntico ...
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, set, onValue, get, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
