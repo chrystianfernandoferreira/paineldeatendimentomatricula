@@ -5,67 +5,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Painel ETEC - Resposta Instantânea</title>
     <style>
+        /* Ajuste de box-sizing e fluidez */
         * { box-sizing: border-box; margin: 0; padding: 0; opacity: 1 !important; }
         
         body, html {
-            width: 100%; height: 100%; background: #111827;
+            width: 100%; 
+            min-height: 100%; 
+            background: #111827;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            color: #ffffff; overflow: hidden; 
+            color: #ffffff; 
+            /* Permitir rolagem apenas se o conteúdo exceder a tela em dispositivos pequenos */
+            overflow-x: hidden;
+            overflow-y: auto; 
         }
 
         .screen {
-            display: flex; flex-direction: column; width: 100vw; height: 100dvh;
+            display: flex; 
+            flex-direction: column; 
+            width: 100vw; 
+            /* Use min-height para evitar que o conteúdo seja cortado em telas baixas */
+            min-height: 100vh; 
             background: linear-gradient(135deg, #7f1d1d, #1f2937);
         }
 
         .header {
-            flex: 0 0 auto; background: #991b1b; text-align: center; padding: 2.5vmin;
+            flex: 0 0 auto; 
+            background: #991b1b; 
+            text-align: center; 
+            padding: 2.5vmin;
             border-bottom: 5px solid #fde047;
         }
 
         .header h1 { 
-            font-size: clamp(1.8rem, 7vh, 4.5rem); 
-            text-transform: uppercase; letter-spacing: 3px;
-            font-weight: 900; color: #ffffff;
+            font-size: clamp(1.5rem, 5vh, 4rem); 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            font-weight: 900; 
+            color: #ffffff;
         }
         
         .senha-principal { 
-            font-size: clamp(5rem, 28vh, 22rem); 
-            font-weight: 900; color: #fde047; 
-            line-height: 0.85; margin: 1vh 0;
+            font-size: clamp(4rem, 25vh, 20rem); 
+            font-weight: 900; 
+            color: #fde047; 
+            line-height: 1; 
+            margin: 1vh 0;
             text-shadow: 4px 4px 0px rgba(0,0,0,0.5);
         }
 
-        .setor-principal { font-size: clamp(1.5rem, 8vh, 6rem); font-weight: bold; }
+        .setor-principal { 
+            font-size: clamp(1.2rem, 6vh, 5rem); 
+            font-weight: bold; 
+            padding-bottom: 10px;
+        }
 
-        .content { flex: 1; display: flex; gap: 2vmin; padding: 2vmin; min-height: 0; }
+        .content { 
+            flex: 1; 
+            display: flex; 
+            gap: 2vmin; 
+            padding: 2vmin; 
+            min-height: 0; 
+        }
 
-        @media (orientation: portrait) { .content { flex-direction: column; } }
+        /* Responsividade para celular em pé ou telas estreitas */
+        @media (max-width: 768px), (orientation: portrait) { 
+            .content { flex-direction: column; } 
+            .senha-principal { margin: 2vh 0; }
+        }
 
         .section {
-            flex: 1; background: #f3f4f6; color: #000000;
-            border-radius: 25px; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center;
-            padding: 2vmin; box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+            flex: 1; 
+            background: #f3f4f6; 
+            color: #000000;
+            border-radius: 25px; 
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            text-align: center;
+            padding: 3vmin; 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
         }
 
         .section h2 { 
-            font-size: clamp(1.2rem, 5vh, 3rem); color: #7f1d1d; 
-            margin-bottom: 1.5vh; text-transform: uppercase; font-weight: 800;
+            font-size: clamp(1.1rem, 4vh, 2.5rem); 
+            color: #7f1d1d; 
+            margin-bottom: 1vh; 
+            text-transform: uppercase; 
+            font-weight: 800;
         }
         
-        .info { font-size: clamp(1.1rem, 4.5vh, 2.8rem); font-weight: bold; }
+        .info { 
+            font-size: clamp(1rem, 3.5vh, 2.2rem); 
+            font-weight: bold; 
+        }
 
         .controls {
-            background: #020617; padding: 2vmin;
-            display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5vmin;
+            background: #020617; 
+            padding: 3vmin;
+            display: flex; 
+            justify-content: center; 
+            flex-wrap: wrap; /* Garante que os botões pulem de linha se não couberem */
+            gap: 2vmin;
         }
 
         button {
-            font-size: clamp(0.9rem, 2.8vh, 1.8rem);
-            padding: 1.8vh 3.5vw; border: none; border-radius: 15px;
-            cursor: pointer; font-weight: bold; box-shadow: 0 4px 0px rgba(0,0,0,0.3);
+            font-size: clamp(0.85rem, 2.5vh, 1.6rem);
+            padding: 2vh 4vw; 
+            border: none; 
+            border-radius: 12px;
+            cursor: pointer; 
+            font-weight: bold; 
+            box-shadow: 0 4px 0px rgba(0,0,0,0.3);
             transition: transform 0.05s;
+            /* Garante que o botão não fique esmagado em telas pequenas */
+            min-width: 140px; 
+            flex: 1; 
+            max-width: 300px;
         }
         button:active { transform: scale(0.92); }
 
@@ -74,9 +130,13 @@
         .reset { background: #f59e0b; color: #000000; }
 
         .footer {
-            background: #020617; text-align: center; padding: 2.5vh;
-            font-size: clamp(0.8rem, 2.5vh, 1.5rem); color: #ffffff;
-            border-top: 2px solid #1f2937; font-weight: 900; 
+            background: #020617; 
+            text-align: center; 
+            padding: 2vh;
+            font-size: clamp(0.7rem, 2vh, 1.2rem); 
+            color: #ffffff;
+            border-top: 2px solid #1f2937; 
+            font-weight: 700; 
         }
     </style>
 </head>
@@ -144,10 +204,8 @@
     }
 
     async function chamar(tipo) {
-        // Ação imediata 1: Som e Voz local (sem esperar servidor)
         document.getElementById('tindon').play().catch(() => {});
         
-        // Ação imediata 2: Buscar e processar dados
         const snap = await get(estadoRef);
         let e = snap.exists() ? snap.val() : { docAtual: "--", docProx: 1, matAtual: "--", matProx: 1, senha: "--", setor: "AGUARDANDO" };
 
@@ -163,20 +221,17 @@
             e.setor = "MATRÍCULA";
         }
         
-        // Ação imediata 3: Atualizar visual e falar (Feedback Instantâneo)
-        ultimaSenhaFada = e.senha; // Evita loop de voz no onValue
+        ultimaSenhaFada = e.senha; 
         document.getElementById('senha').textContent = e.senha;
         document.getElementById('setor').textContent = e.setor;
         falar(`Senha número ${e.senha}, setor ${e.setor}`);
         
-        // Ação 4: Sincronizar com outros aparelhos
         await set(estadoRef, e);
     }
 
     onValue(estadoRef, snap => {
         if (snap.exists()) {
             const d = snap.val();
-            // Atualização visual sincronizada
             document.getElementById('senha').textContent = d.senha;
             document.getElementById('setor').textContent = d.setor;
             document.getElementById('docAtual').textContent = d.docAtual;
@@ -184,7 +239,6 @@
             document.getElementById('matAtual').textContent = d.matAtual;
             document.getElementById('matProx').textContent = d.matProx;
 
-            // Se a mudança veio de OUTRO dispositivo, este fala também
             if (d.senha !== "--" && d.senha !== ultimaSenhaFada) {
                 document.getElementById('tindon').play().catch(() => {});
                 falar(`Senha número ${d.senha}, setor ${d.setor}`);
@@ -193,7 +247,6 @@
         }
     });
 
-    // Eventos de clique único (Fim do delay)
     document.getElementById('btnDoc').addEventListener('mousedown', (e) => { e.preventDefault(); chamar('DOCUMENTACAO'); });
     document.getElementById('btnMat').addEventListener('mousedown', (e) => { e.preventDefault(); chamar('MATRICULA'); });
     
