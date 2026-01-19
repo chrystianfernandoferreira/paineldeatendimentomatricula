@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Painel ETEC - Visualização Estendida</title>
+    <title>Painel ETEC - Preenchimento Total</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
@@ -14,112 +14,121 @@
         }
 
         .screen {
-            display: flex; flex-direction: column; width: 96vw; height: 96vh;
+            display: flex; flex-direction: column; 
+            width: 100vw; height: 100vh; /* Ocupa 100% da tela */
             background: linear-gradient(135deg, #7f1d1d, #1f2937);
-            border-radius: 20px; overflow: hidden; box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            overflow: hidden;
+            position: relative;
         }
 
-        /* HEADER AMPLIADO PARA VISÃO À DISTÂNCIA */
+        /* CABEÇALHO: Ocupa o topo com destaque */
         .header { 
             flex: 0 0 auto; 
             background: #991b1b; 
             text-align: center; 
-            padding: 1.5vh 2vw; 
+            padding: 2vh 2vw; 
             border-bottom: 6px solid #fde047; 
         }
         .header h1 { 
-            font-size: clamp(1.5rem, 6vh, 4rem); /* Fonte aumentada */
+            font-size: clamp(1.2rem, 4.5vh, 3.5rem);
             text-transform: uppercase; 
             font-weight: 900; 
-            letter-spacing: -1px;
         }
         
         .senha-principal { 
-            font-size: clamp(5rem, 35vh, 25rem); /* Aumentado significativamente */
+            font-size: clamp(4rem, 28vh, 22rem); 
             font-weight: 900; color: #fde047; 
-            line-height: 0.9; margin: 1vh 0; 
-            text-shadow: 6px 6px 0px rgba(0,0,0,0.5); 
+            line-height: 0.85; margin: 1vh 0; 
+            text-shadow: 5px 5px 0px rgba(0,0,0,0.5); 
         }
 
         .setor-principal { 
-            font-size: clamp(1.5rem, 8vh, 6rem); /* Aumentado significativamente */
+            font-size: clamp(1.2rem, 7vh, 5rem); 
             font-weight: 800; 
             text-transform: uppercase; 
-            color: #ffffff;
         }
 
-        .piscar { animation: flash 0.8s ease-in-out 3; }
-        @keyframes flash {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.3; transform: scale(1.02); color: #fff; }
-        }
-
-        /* CAMPOS RETANGULARES REDUZIDOS */
+        /* CONTEÚDO: Preenche todo o espaço inferior livre */
         .content { 
-            flex: 1; 
+            flex: 1; /* Expande para ocupar o máximo possível */
             display: flex; 
-            gap: 2vmin; 
-            padding: 2vmin; 
-            align-items: center; /* Centraliza os quadros menores no espaço restante */
-            justify-content: center;
-        }
-
-        @media (max-width: 768px) or (orientation: portrait) { 
-            .content { flex-direction: column; } 
-            .screen { width: 98vw; height: 98vh; } 
-            .senha-principal { font-size: clamp(4rem, 25vh, 15rem); }
+            gap: 1.5vmin; 
+            padding: 1.5vmin; 
+            min-height: 0; /* Essencial para flex-child não transbordar */
         }
 
         .section { 
             flex: 1; 
-            max-height: 25vh; /* Limitador de altura para os campos Documentação/Matrícula */
             background: #f3f4f6; 
             color: #000; 
             border-radius: 15px; 
             display: flex; 
             flex-direction: column; 
-            justify-content: center; 
+            justify-content: space-evenly; /* Distribui o texto internamente */
             align-items: center; 
-            padding: 1.5vmin;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+            padding: 2vh;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.1);
         }
         
         .section h2 { 
-            font-size: clamp(1rem, 4vh, 2.5rem); 
+            font-size: clamp(1.2rem, 5vh, 3.5rem); 
             color: #7f1d1d; 
             text-transform: uppercase; 
             font-weight: 900; 
         }
         .info { 
-            font-size: clamp(0.9rem, 3.5vh, 2rem); 
+            font-size: clamp(1rem, 4.5vh, 2.8rem); 
             font-weight: bold; 
+            line-height: 1.2;
         }
+        .info strong { color: #991b1b; font-size: 1.2em; }
 
-        /* CONTROLES */
-        .controls { background: #020617; padding: 2vmin; display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5vmin; }
+        /* CONTROLES: Ajustados para não cortar em telas pequenas */
+        .controls { 
+            flex: 0 0 auto;
+            background: #020617; 
+            padding: 1.5vh; 
+            display: flex; 
+            justify-content: center; 
+            flex-wrap: wrap; 
+            gap: 1vh; 
+        }
 
         button {
-            font-size: clamp(0.8rem, 2.2vh, 1.4rem); 
-            padding: 1.5vh 1vw; 
-            border: none; border-radius: 10px; cursor: pointer; font-weight: bold; 
-            flex: 1; min-width: 120px; transition: transform 0.05s;
+            font-size: clamp(0.7rem, 2vh, 1.3rem); 
+            padding: 1.8vh 1.5vw; 
+            border: none; border-radius: 8px; cursor: pointer; font-weight: bold; 
+            flex: 1; min-width: 130px; 
             display: flex; align-items: center; justify-content: center;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            white-space: nowrap;
         }
-        button:active { transform: scale(0.95); }
 
         .doc { background: #dc2626; color: #fff; }
         .mat { background: #334155; color: #fff; }
         .reset { background: #f59e0b; color: #000; }
 
         .footer { 
-            background: #020617; text-align: center; 
-            padding: 1.5vh 1vw; 
+            flex: 0 0 auto;
+            background: #000; text-align: center; 
+            padding: 1.2vh 1vw; 
             font-weight: 900; 
-            font-size: clamp(0.6rem, 2vh, 1.1rem); 
+            font-size: clamp(0.6rem, 1.8vh, 1rem); 
             color: #ffffff; 
-            border-top: 1px solid #1f2937;
-            letter-spacing: 0.5px;
+            border-top: 1px solid #334155;
+        }
+
+        /* Responsividade para Celulares (Vertical) */
+        @media (max-width: 768px) and (orientation: portrait) { 
+            .content { flex-direction: column; } 
+            .senha-principal { font-size: 20vh; }
+            .section { padding: 1vh; }
+        }
+
+        /* Animação */
+        .piscar { animation: flash 0.6s ease-in-out 3; }
+        @keyframes flash {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.03); }
         }
     </style>
 </head>
@@ -172,70 +181,53 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const estadoRef = ref(db, "estado");
-    let ultimoTimestampProcessado = 0;
+    let lastTs = 0;
 
-    function executarChamadaVoz(senha, setor) {
-        const elSenha = document.getElementById('senha');
-        elSenha.classList.remove('piscar');
-        void elSenha.offsetWidth; 
-        elSenha.classList.add('piscar');
-
+    function falar(s, set) {
+        const el = document.getElementById('senha');
+        el.classList.remove('piscar'); void el.offsetWidth; el.classList.add('piscar');
         const audio = document.getElementById('tindon');
-        audio.pause(); audio.currentTime = 0;
-        audio.play().catch(() => {});
-
+        audio.pause(); audio.currentTime = 0; audio.play().catch(()=>{});
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
-            const frase = new SpeechSynthesisUtterance(`Senha número ${senha}, setor ${setor}`);
-            frase.lang = "pt-BR";
-            frase.rate = 1.1;
-            window.speechSynthesis.speak(frase);
+            const m = new SpeechSynthesisUtterance(`Senha ${s}, setor ${set}`);
+            m.lang = "pt-BR"; m.rate = 1.1;
+            window.speechSynthesis.speak(m);
         }
     }
 
-    async function incrementarSenha(tipo) {
+    async function chamar(tipo) {
         const snap = await get(estadoRef);
         let d = snap.exists() ? snap.val() : { docAtual: "--", docProx: 1, matAtual: "--", matProx: 1 };
-        let updates = {};
+        let up = {};
         if (tipo === "DOCUMENTACAO") {
-            updates['docAtual'] = d.docProx;
-            updates['senha'] = d.docProx;
-            updates['docProx'] = d.docProx + 1;
-            updates['setor'] = "DOCUMENTAÇÃO";
+            up = { docAtual: d.docProx, senha: d.docProx, docProx: d.docProx + 1, setor: "DOCUMENTAÇÃO" };
         } else {
-            updates['matAtual'] = d.matProx;
-            updates['senha'] = d.matProx;
-            updates['matProx'] = d.matProx + 1;
-            updates['setor'] = "MATRÍCULA";
+            up = { matAtual: d.matProx, senha: d.matProx, matProx: d.matProx + 1, setor: "MATRÍCULA" };
         }
-        updates['trigger'] = Date.now();
-        await update(estadoRef, updates);
+        up.trigger = Date.now();
+        await update(estadoRef, up);
     }
 
-    onValue(estadoRef, (snap) => {
-        if (!snap.exists()) return;
-        const dados = snap.val();
-        document.getElementById('senha').textContent = dados.senha || "--";
-        document.getElementById('setor').textContent = dados.setor || "AGUARDANDO";
-        document.getElementById('docAtual').textContent = dados.docAtual || "--";
-        document.getElementById('docProx').textContent = dados.docProx || "1";
-        document.getElementById('matAtual').textContent = dados.matAtual || "--";
-        document.getElementById('matProx').textContent = dados.matProx || "1";
-
-        if (dados.trigger && dados.trigger > ultimoTimestampProcessado) {
-            ultimoTimestampProcessado = dados.trigger;
-            if (dados.senha && dados.senha !== "--") {
-                executarChamadaVoz(dados.senha, dados.setor);
-            }
+    onValue(estadoRef, (s) => {
+        if (!s.exists()) return;
+        const d = s.val();
+        document.getElementById('senha').innerText = d.senha || "--";
+        document.getElementById('setor').innerText = d.setor || "AGUARDANDO";
+        document.getElementById('docAtual').innerText = d.docAtual || "--";
+        document.getElementById('docProx').innerText = d.docProx || "1";
+        document.getElementById('matAtual').innerText = d.matAtual || "--";
+        document.getElementById('matProx').innerText = d.matProx || "1";
+        if (d.trigger && d.trigger > lastTs) {
+            lastTs = d.trigger;
+            if (d.senha !== "--") falar(d.senha, d.setor);
         }
     });
 
-    document.getElementById('btnDoc').onclick = () => incrementarSenha("DOCUMENTACAO");
-    document.getElementById('btnMat').onclick = () => incrementarSenha("MATRICULA");
+    document.getElementById('btnDoc').onclick = () => chamar("DOCUMENTACAO");
+    document.getElementById('btnMat').onclick = () => chamar("MATRICULA");
     document.getElementById('btnReset').onclick = async () => {
-        if (confirm("Redefinir painel?")) {
-            await set(estadoRef, { docAtual: "--", docProx: 1, matAtual: "--", matProx: 1, senha: "--", setor: "AGUARDANDO", trigger: 0 });
-        }
+        if (confirm("Resetar?")) await set(estadoRef, { docAtual: "--", docProx: 1, matAtual: "--", matProx: 1, senha: "--", setor: "AGUARDANDO", trigger: 0 });
     };
 </script>
 </body>
