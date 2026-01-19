@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Painel ETEC - Proporção Estrita</title>
+    <title>Painel ETEC - Proporção Otimizada</title>
     <style>
-        /* Bloqueio de rolagem e seleção para parecer um App nativo */
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
         
         body, html {
@@ -22,83 +21,79 @@
             background: linear-gradient(145deg, #7f1d1d, #111827);
         }
 
-        /* HEADER: Proporção de 55% da altura da tela */
+        /* HEADER: Ajustado para 50% da altura da tela */
         .header { 
-            height: 55vh;
+            height: 50vh;
             background: rgba(153, 27, 27, 0.9);
             text-align: center; 
             display: flex; flex-direction: column; justify-content: center;
-            padding: 2vh; 
-            border-bottom: 0.8vh solid #fde047; 
+            padding: 1.5vh; 
+            border-bottom: 0.6vh solid #fde047; 
         }
 
-        /* Títulos: Sempre 4.5% da altura da tela */
         .header h1, .section h2 { 
-            font-size: 4.5vh; 
+            font-size: 4vh; 
             text-transform: uppercase; 
             font-weight: 900; 
-            letter-spacing: 0.2vw;
         }
 
-        /* Senha: Sempre 30% da altura da tela */
         .senha-principal { 
-            font-size: 30vh; 
+            font-size: 28vh; 
             font-weight: 900; color: #fde047; 
-            line-height: 1; margin: 1vh 0;
+            line-height: 0.9; margin: 0.5vh 0;
             text-shadow: 0.5vh 0.5vh 0px rgba(0,0,0,0.5); 
         }
 
-        /* Setor: Sempre 7% da altura da tela */
         .setor-principal { 
-            font-size: 7vh; 
+            font-size: 6.5vh; 
             font-weight: 800; text-transform: uppercase;
         }
 
-        /* CONTEÚDO: Proporção de 20% da altura da tela */
+        /* CONTEÚDO (RETÂNGULOS): Aumentado para 25% da altura da tela */
         .content { 
-            height: 20vh;
+            height: 25vh;
             display: flex; gap: 1.5vw; padding: 1.5vh; 
         }
 
         .section { 
             flex: 1; background: #f3f4f6; color: #000; border-radius: 1.5vh; 
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            padding: 1vh;
         }
 
-        /* Informações internas: 3.5% da altura da tela */
         .info { 
-            font-size: 3.5vh; 
+            font-size: 3.2vh; 
             font-weight: 700; 
         }
         .info strong { color: #991b1b; }
 
-        /* CONTROLES: Proporção de 15% da altura da tela */
+        /* CONTROLES (BOTÕES): Diminuído para 10% da altura da tela */
         .controls { 
-            height: 15vh;
+            height: 10vh;
             background: #020617; 
-            padding: 1.5vh; 
+            padding: 1vh 1.5vw; 
             display: flex; justify-content: center; gap: 1.5vw;
         }
 
         button {
-            font-size: 2.2vh; /* Fonte do botão proporcional à altura */
-            padding: 0 2vw; border: none; border-radius: 1vh; 
+            font-size: 2vh; 
+            border: none; border-radius: 0.8vh; 
             cursor: pointer; font-weight: bold; 
             flex: 1;
             display: flex; align-items: center; justify-content: center;
             transition: transform 0.1s;
         }
-        button:active { transform: scale(0.95); }
+        button:active { transform: scale(0.97); }
 
         .doc { background: #dc2626; color: #fff; }
         .mat { background: #374151; color: #fff; }
         .reset { background: #eab308; color: #000; }
 
-        /* RODAPÉ: Proporção de 10% da altura da tela */
+        /* RODAPÉ: Mantido em 15% (ou o restante disponível) para garantir visibilidade */
         .footer { 
-            height: 10vh;
+            height: 15vh;
             background: #000; text-align: center; 
-            display: flex; align-items: center; justify-content: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             font-weight: 700; 
             font-size: 2vh; 
             color: rgba(255,255,255,0.8);
@@ -106,20 +101,20 @@
             padding: 0 2vw;
         }
 
-        /* ANIMAÇÃO PISCAR */
+        /* RESPONSIVIDADE SMARTPHONE (PORTRAIT) */
+        @media (max-width: 600px) and (orientation: portrait) {
+            .header { height: 40vh; }
+            .senha-principal { font-size: 22vh; }
+            .content { height: 35vh; flex-direction: column; }
+            .controls { height: 12vh; gap: 1vh; }
+            button { font-size: 1.8vh; }
+            .footer { height: 13vh; font-size: 1.6vh; }
+        }
+
         .piscar { animation: flash 0.5s ease-in-out 3; }
         @keyframes flash {
             0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.3; transform: scale(1.05); }
-        }
-
-        /* AJUSTE PARA SMARTPHONES EM PÉ */
-        @media (max-width: 600px) and (orientation: portrait) {
-            .header { height: 45vh; }
-            .senha-principal { font-size: 20vh; }
-            .content { height: 30vh; flex-direction: column; }
-            .controls { height: 15vh; }
-            .footer { height: 10vh; font-size: 1.8vh; }
+            50% { opacity: 0.3; transform: scale(1.02); }
         }
     </style>
 </head>
@@ -151,7 +146,10 @@
         <button class="reset" id="btnReset">🔄 Redefinir</button>
     </div>
     
-    <div class="footer">Etec Sylvio de Mattos Carvalho • Centro Paula Souza</div>
+    <div class="footer">
+        <div>Etec Sylvio de Mattos Carvalho</div>
+        <div style="font-size: 0.8em; opacity: 0.7;">Centro Paula Souza</div>
+    </div>
 </div>
 
 <audio id="tindon" src="https://actions.google.com/sounds/v1/alarms/airport_chime.ogg" preload="auto"></audio>
