@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Painel ETEC - Harmonia Total</title>
+    <title>Painel ETEC - Proporção Estrita</title>
     <style>
-        /* Reset e Base */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        /* Bloqueio de rolagem e seleção para parecer um App nativo */
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
         
         body, html {
-            width: 100%; 
-            height: 100svh; /* Usa a altura real disponível no mobile */
+            width: 100vw; height: 100svh;
             background: #020617;
             display: flex; justify-content: center; align-items: center;
-            font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             color: #ffffff; overflow: hidden;
         }
 
@@ -21,79 +20,73 @@
             display: flex; flex-direction: column; 
             width: 100vw; height: 100svh;
             background: linear-gradient(145deg, #7f1d1d, #111827);
-            overflow: hidden;
         }
 
-        /* CABEÇALHO: Prioridade visual 1 */
+        /* HEADER: Proporção de 55% da altura da tela */
         .header { 
-            flex: 2; /* Ocupa a maior parte da tela */
-            background: rgba(153, 27, 27, 0.8);
-            backdrop-filter: blur(10px);
+            height: 55vh;
+            background: rgba(153, 27, 27, 0.9);
             text-align: center; 
             display: flex; flex-direction: column; justify-content: center;
-            padding: 1vh 2vw; 
-            border-bottom: 4px solid #fde047; 
+            padding: 2vh; 
+            border-bottom: 0.8vh solid #fde047; 
         }
 
+        /* Títulos: Sempre 4.5% da altura da tela */
         .header h1, .section h2 { 
-            font-size: clamp(1rem, 4vh, 3rem); 
+            font-size: 4.5vh; 
             text-transform: uppercase; 
             font-weight: 900; 
-            letter-spacing: 1px;
-            opacity: 0.9;
+            letter-spacing: 0.2vw;
         }
 
+        /* Senha: Sempre 30% da altura da tela */
         .senha-principal { 
-            font-size: clamp(4rem, 28vh, 22rem); 
+            font-size: 30vh; 
             font-weight: 900; color: #fde047; 
-            line-height: 0.85; margin: 0.5vh 0;
-            text-shadow: 0 10px 20px rgba(0,0,0,0.4); 
+            line-height: 1; margin: 1vh 0;
+            text-shadow: 0.5vh 0.5vh 0px rgba(0,0,0,0.5); 
         }
 
+        /* Setor: Sempre 7% da altura da tela */
         .setor-principal { 
-            font-size: clamp(1.4rem, 7vh, 5.5rem); 
+            font-size: 7vh; 
             font-weight: 800; text-transform: uppercase;
-            color: #fff;
         }
 
-        /* CONTEÚDO: Retângulos Achatados e Proporcionais */
+        /* CONTEÚDO: Proporção de 20% da altura da tela */
         .content { 
-            flex: 0 0 auto; 
-            height: 18vh; /* Altura controlada para não empurrar o resto */
-            display: flex; gap: 12px; padding: 12px; 
+            height: 20vh;
+            display: flex; gap: 1.5vw; padding: 1.5vh; 
         }
 
         .section { 
-            flex: 1; background: rgba(243, 244, 246, 0.95); 
-            color: #111; border-radius: 12px; 
+            flex: 1; background: #f3f4f6; color: #000; border-radius: 1.5vh; 
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            padding: 5px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
+        /* Informações internas: 3.5% da altura da tela */
         .info { 
-            font-size: clamp(0.8rem, 3.2vh, 1.8rem); 
+            font-size: 3.5vh; 
             font-weight: 700; 
-            line-height: 1.2;
         }
         .info strong { color: #991b1b; }
 
-        /* CONTROLES: Auto-ajuste para Mobile */
+        /* CONTROLES: Proporção de 15% da altura da tela */
         .controls { 
-            flex: 0 0 auto; 
-            background: rgba(2, 6, 23, 0.9); 
-            padding: 12px; 
-            display: flex; justify-content: center; align-items: center;
-            gap: 10px;
+            height: 15vh;
+            background: #020617; 
+            padding: 1.5vh; 
+            display: flex; justify-content: center; gap: 1.5vw;
         }
 
         button {
-            font-size: clamp(0.7rem, 1.8vh, 1.1rem); 
-            padding: 12px 8px; border: none; border-radius: 8px; 
+            font-size: 2.2vh; /* Fonte do botão proporcional à altura */
+            padding: 0 2vw; border: none; border-radius: 1vh; 
             cursor: pointer; font-weight: bold; 
-            flex: 1; max-width: 200px;
+            flex: 1;
             display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s;
+            transition: transform 0.1s;
         }
         button:active { transform: scale(0.95); }
 
@@ -101,31 +94,32 @@
         .mat { background: #374151; color: #fff; }
         .reset { background: #eab308; color: #000; }
 
-        /* RODAPÉ: Otimizado para Mobile */
+        /* RODAPÉ: Proporção de 10% da altura da tela */
         .footer { 
-            flex: 0 0 auto; background: #000; text-align: center; 
-            padding: 10px 5px; 
+            height: 10vh;
+            background: #000; text-align: center; 
+            display: flex; align-items: center; justify-content: center;
             font-weight: 700; 
-            font-size: clamp(0.65rem, 1.8vh, 1rem); 
-            color: rgba(255,255,255,0.7);
-            border-top: 1px solid #1e293b;
-            letter-spacing: 0.3px;
+            font-size: 2vh; 
+            color: rgba(255,255,255,0.8);
+            border-top: 2px solid #1e293b;
+            padding: 0 2vw;
         }
 
-        /* Ajustes Mobile (Portrait) */
-        @media (max-width: 600px) and (orientation: portrait) {
-            .header { flex: 3; }
-            .content { height: 28vh; flex-direction: column; gap: 8px; }
-            .controls { padding: 8px; }
-            button { padding: 10px 5px; min-width: 80px; }
-            .footer { padding-bottom: 15px; } /* Espaço extra para barras de navegação mobile */
-        }
-
-        /* Animação */
-        .piscar { animation: flash 0.6s ease-in-out 3; }
+        /* ANIMAÇÃO PISCAR */
+        .piscar { animation: flash 0.5s ease-in-out 3; }
         @keyframes flash {
             0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.3; transform: scale(1.02); color: #fff; }
+            50% { opacity: 0.3; transform: scale(1.05); }
+        }
+
+        /* AJUSTE PARA SMARTPHONES EM PÉ */
+        @media (max-width: 600px) and (orientation: portrait) {
+            .header { height: 45vh; }
+            .senha-principal { font-size: 20vh; }
+            .content { height: 30vh; flex-direction: column; }
+            .controls { height: 15vh; }
+            .footer { height: 10vh; font-size: 1.8vh; }
         }
     </style>
 </head>
