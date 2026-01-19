@@ -5,34 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Painel ETEC - Resposta Instantânea</title>
     <style>
-        /* CSS MANTIDO CONFORME SOLICITAÇÃO DE CENTRALIZAÇÃO E RESPONSIVIDADE */
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         body, html {
             width: 100%; height: 100%; background: #020617;
             display: flex; justify-content: center; align-items: center;
             font-family: 'Segoe UI', Roboto, sans-serif; color: #ffffff; overflow: hidden;
         }
+
         .screen {
             display: flex; flex-direction: column; width: 96vw; height: 96vh;
             background: linear-gradient(135deg, #7f1d1d, #1f2937);
             border-radius: 20px; overflow: hidden; box-shadow: 0 0 50px rgba(0,0,0,0.8);
         }
+
         .header { flex: 0 0 auto; background: #991b1b; text-align: center; padding: 2vh; border-bottom: 5px solid #fde047; }
         .header h1 { font-size: clamp(1.2rem, 4vh, 3rem); text-transform: uppercase; font-weight: 900; }
-        .senha-principal { font-size: clamp(3.5rem, 22vh, 18rem); font-weight: 900; color: #fde047; line-height: 1; margin: 0.5vh 0; text-shadow: 4px 4px 0px rgba(0,0,0,0.5); }
+        
+        .senha-principal { 
+            font-size: clamp(3.5rem, 22vh, 18rem); 
+            font-weight: 900; color: #fde047; 
+            line-height: 1; margin: 0.5vh 0; 
+            text-shadow: 4px 4px 0px rgba(0,0,0,0.5); 
+        }
+
         .setor-principal { font-size: clamp(1.1rem, 5vh, 4.5rem); font-weight: bold; }
+
         .content { flex: 1; display: flex; gap: 2vmin; padding: 2vmin; align-items: stretch; }
-        @media (max-width: 768px) or (orientation: portrait) { .content { flex-direction: column; } .screen { width: 98vw; height: 98vh; } }
+
+        @media (max-width: 768px) or (orientation: portrait) { 
+            .content { flex-direction: column; } 
+            .screen { width: 98vw; height: 98vh; } 
+        }
+
         .section { flex: 1; background: #f3f4f6; color: #000; border-radius: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2vmin; }
         .section h2 { font-size: clamp(1rem, 3.5vh, 2rem); color: #7f1d1d; text-transform: uppercase; font-weight: 800; }
         .info { font-size: clamp(0.9rem, 3vh, 1.8rem); font-weight: bold; }
+
+        /* CONTROLES E BOTÕES */
         .controls { background: #020617; padding: 2vmin; display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5vmin; }
-        button { font-size: clamp(0.8rem, 2.2vh, 1.4rem); padding: 1.5vh 3vw; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; flex: 1; min-width: 120px; transition: transform 0.05s; }
+
+        button {
+            /* Fonte fluida: ajusta entre 0.7rem e 1.4rem dependendo da tela */
+            font-size: clamp(0.7rem, 2.5vw, 1.4rem); 
+            padding: 1.5vh 1vw; 
+            border: none; border-radius: 10px; cursor: pointer; font-weight: bold; 
+            flex: 1; min-width: 110px; transition: transform 0.05s;
+            
+            /* Impede que o texto quebre ou saia do botão */
+            display: flex; align-items: center; justify-content: center;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
         button:active { transform: scale(0.95); }
+
         .doc { background: #dc2626; color: #fff; }
         .mat { background: #334155; color: #fff; }
         .reset { background: #f59e0b; color: #000; }
-        .footer { background: #020617; text-align: center; padding: 1.5vh; font-size: clamp(0.6rem, 1.8vh, 1rem); border-top: 1px solid #1f2937; }
+
+        /* RODAPÉ AJUSTADO */
+        .footer { 
+            background: #020617; text-align: center; 
+            padding: 2vh 1vw; 
+            /* Negrito e tamanho ajustável */
+            font-weight: 900; 
+            font-size: clamp(0.6rem, 2.2vw, 1.2rem); 
+            color: #ffffff; 
+            border-top: 1px solid #1f2937;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
@@ -58,9 +99,9 @@
     </div>
 
     <div class="controls">
-        <button class="doc" id="btnDoc">📄 Documentação (F1)</button>
-        <button class="mat" id="btnMat">📝 Matrícula (F2)</button>
-        <button class="reset" id="btnReset">🔄 Redefinir (F3)</button>
+        <button class="doc" id="btnDoc">📄 Documentação</button>
+        <button class="mat" id="btnMat">📝 Matrícula</button>
+        <button class="reset" id="btnReset">🔄 Redefinir</button>
     </div>
     <div class="footer">Etec Sylvio de Mattos Carvalho • Centro Paula Souza</div>
 </div>
@@ -85,23 +126,19 @@
     const db = getDatabase(app);
     const estadoRef = ref(db, "estado");
     
-    // Controle rigoroso de sincronia para evitar falhas de execução repetida ou atrasada
     let ultimoTimestampProcessado = 0;
 
     function executarChamadaVoz(senha, setor) {
-        // 1. Toca o sino instantaneamente
         const audio = document.getElementById('tindon');
         audio.pause();
         audio.currentTime = 0;
-        audio.play().catch(e => console.warn("Áudio requer interação prévia."));
+        audio.play().catch(() => {});
 
-        // 2. Executa a voz (synthesis)
         if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel(); // Para qualquer fala anterior imediatamente
+            window.speechSynthesis.cancel();
             const frase = new SpeechSynthesisUtterance(`Senha número ${senha}, setor ${setor}`);
             frase.lang = "pt-BR";
-            frase.rate = 1.1; // Velocidade ideal para clareza e agilidade
-            frase.pitch = 1.0;
+            frase.rate = 1.1;
             window.speechSynthesis.speak(frase);
         }
     }
@@ -122,19 +159,14 @@
             updates['matProx'] = d.matProx + 1;
             updates['setor'] = "MATRÍCULA";
         }
-        
-        // O segredo do tempo real: enviamos o timestamp exato do sistema
         updates['trigger'] = Date.now();
-        
         await update(estadoRef, updates);
     }
 
-    // LISTENER EM TEMPO REAL (Dispara em todos os dispositivos simultaneamente)
     onValue(estadoRef, (snap) => {
         if (!snap.exists()) return;
         const dados = snap.val();
 
-        // Atualiza a interface visual
         document.getElementById('senha').textContent = dados.senha || "--";
         document.getElementById('setor').textContent = dados.setor || "AGUARDANDO";
         document.getElementById('docAtual').textContent = dados.docAtual || "--";
@@ -142,7 +174,6 @@
         document.getElementById('matAtual').textContent = dados.matAtual || "--";
         document.getElementById('matProx').textContent = dados.matProx || "1";
 
-        // Verifica o gatilho de áudio
         if (dados.trigger && dados.trigger > ultimoTimestampProcessado) {
             ultimoTimestampProcessado = dados.trigger;
             if (dados.senha && dados.senha !== "--") {
@@ -151,21 +182,12 @@
         }
     });
 
-    // Eventos de clique
     document.getElementById('btnDoc').onclick = () => incrementarSenha("DOCUMENTACAO");
     document.getElementById('btnMat').onclick = () => incrementarSenha("MATRICULA");
     document.getElementById('btnReset').onclick = async () => {
         if (confirm("Redefinir painel?")) {
             await set(estadoRef, { docAtual: "--", docProx: 1, matAtual: "--", matProx: 1, senha: "--", setor: "AGUARDANDO", trigger: 0 });
-            window.location.reload();
         }
-    };
-
-    // Atalhos de teclado
-    window.onkeydown = (e) => {
-        if (e.key === 'F1') { e.preventDefault(); incrementarSenha("DOCUMENTACAO"); }
-        if (e.key === 'F2') { e.preventDefault(); incrementarSenha("MATRICULA"); }
-        if (e.key === 'F3') { e.preventDefault(); document.getElementById('btnReset').click(); }
     };
 </script>
 </body>
