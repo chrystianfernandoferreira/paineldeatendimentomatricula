@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Painel ETEC - Resposta Instantânea</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; opacity: 1 !important; }
+        
+        body, html {
+            width: 100%; height: 100%; background: #111827;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #ffffff; overflow: hidden; 
+        }
+
+        .screen {
+            display: flex; flex-direction: column; width: 100vw; height: 100dvh;
+            background: linear-gradient(135deg, #7f1d1d, #1f2937);
+        }
+
+        .header {
+            flex: 0 0 auto; background: #991b1b; text-align: center; padding: 2.5vmin;
+            border-bottom: 5px solid #fde047;
+        }
+
+        .header h1 { 
+            font-size: clamp(1.8rem, 7vh, 4.5rem); 
+            text-transform: uppercase; letter-spacing: 3px;
+            font-weight: 900; color: #ffffff;
+        }
+        
+        .senha-principal { 
+            font-size: clamp(5rem, 28vh, 22rem); 
+            font-weight: 900; color: #fde047; 
+            line-height: 0.85; margin: 1vh 0;
+            text-shadow: 4px 4px 0px rgba(0,0,0,0.5);
+        }
+
+        .setor-principal { font-size: clamp(1.5rem, 8vh, 6rem); font-weight: bold; }
+
+        .content { flex: 1; display: flex; gap: 2vmin; padding: 2vmin; min-height: 0; }
+
+        @media (orientation: portrait) { .content { flex-direction: column; } }
+
+        .section {
+            flex: 1; background: #f3f4f6; color: #000000;
+            border-radius: 25px; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+            padding: 2vmin; box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+        }
+
+        .section h2 { 
+            font-size: clamp(1.2rem, 5vh, 3rem); color: #7f1d1d; 
+            margin-bottom: 1.5vh; text-transform: uppercase; font-weight: 800;
+        }
+        
+        .info { font-size: clamp(1.1rem, 4.5vh, 2.8rem); font-weight: bold; }
+
+        .controls {
+            background: #020617; padding: 2vmin;
+            display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5vmin;
+        }
+
+        button {
+            font-size: clamp(0.9rem, 2.8vh, 1.8rem);
+            padding: 1.8vh 3.5vw; border: none; border-radius: 15px;
+            cursor: pointer; font-weight: bold; box-shadow: 0 4px 0px rgba(0,0,0,0.3);
+            transition: transform 0.05s;
+        }
+        button:active { transform: scale(0.92); }
+
+        .doc { background: #dc2626; color: #ffffff; }
+        .mat { background: #334155; color: #ffffff; }
+        .reset { background: #f59e0b; color: #000000; }
+
+        .footer {
+            background: #020617; text-align: center; padding: 2.5vh;
+            font-size: clamp(0.8rem, 2.5vh, 1.5rem); color: #ffffff;
+            border-top: 2px solid #1f2937; font-weight: 900; 
+        }
+    </style>
+</head>
+<body>
+
+<div class="screen">
+    <div class="header">
+        <h1>SENHA EM ATENDIMENTO</h1>
+        <div class="senha-principal" id="senha">--</div>
+        <div class="setor-principal" id="setor">AGUARDANDO</div>
+    </div>
+
+    <div class="content">
+        <div class="section">
+            <h2>DOCUMENTAÇÃO</h2>
+            <div class="info">Atendendo: <strong id="docAtual">--</strong></div>
+            <div class="info">Próxima: <strong id="docProx">1</strong></div>
+        </div>
+
+        <div class="section">
+            <h2>MATRÍCULA</h2>
+            <div class="info">Atendendo: <strong id="matAtual">--</strong></div>
+            <div class="info">Próxima: <strong id="matProx">1</strong></div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="doc" id="btnDoc">📄 Documentação (F1)</button>
+        <button class="mat" id="btnMat">📝 Matrícula (F2)</button>
+        <button class="reset" id="btnReset">🔄 Redefinir (F3)</button>
+    </div>
+
+    <div class="footer">Etec Sylvio de Mattos Carvalho • Centro Paula Souza</div>
+</div>
+
+<audio id="tindon" src="https://actions.google.com/sounds/v1/alarms/airport_chime.ogg" preload="auto"></audio>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, set, onValue, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyCfaPNHgxrem88R7x8dKD9j2SzTYPm9v10",
+        authDomain: "painel-senhas-etec.firebaseapp.com",
+        databaseURL: "https://painel-senhas-etec-default-rtdb.firebaseio.com",
+        projectId: "painel-senhas-etec",
+        storageBucket: "painel-senhas-etec.appspot.com",
+        messagingSenderId: "52328553080",
+        appId: "1:52328553080:web:1fcdda82a6bdbf70732b8d"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const estadoRef = ref(db, "estado");
+    let ultimaSenhaFada = null;
+
+    function falar(texto) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel(); 
+            const msg = new SpeechSynthesisUtterance(texto);
+            msg.lang = "pt-BR";
+            msg.rate = 1.0;
+            window.speechSynthesis.speak(msg);
+        }
+    }
+
+    async function chamar(tipo) {
+        // Ação imediata 1: Som e Voz local (sem esperar servidor)
+        document.getElementById('tindon').play().catch(() => {});
+        
+        // Ação imediata 2: Buscar e processar dados
+        const snap = await get(estadoRef);
+        let e = snap.exists() ? snap.val() : { docAtual: "--", docProx: 1, matAtual: "--", matProx: 1, senha: "--", setor: "AGUARDANDO" };
+
+        if (tipo === "DOCUMENTACAO") {
+            e.docAtual = e.docProx;
+            e.senha = e.docProx;
+            e.docProx++;
+            e.setor = "DOCUMENTAÇÃO";
+        } else {
+            e.matAtual = e.matProx;
+            e.senha = e.matProx;
+            e.matProx++;
+            e.setor = "MATRÍCULA";
+        }
+        
+        // Ação imediata 3: Atualizar visual e falar (Feedback Instantâneo)
+        ultimaSenhaFada = e.senha; // Evita loop de voz no onValue
+        document.getElementById('senha').textContent = e.senha;
+        document.getElementById('setor').textContent = e.setor;
+        falar(`Senha número ${e.senha}, setor ${e.setor}`);
+        
+        // Ação 4: Sincronizar com outros aparelhos
+        await set(estadoRef, e);
+    }
+
+    onValue(estadoRef, snap => {
+        if (snap.exists()) {
+            const d = snap.val();
+            // Atualização visual sincronizada
+            document.getElementById('senha').textContent = d.senha;
+            document.getElementById('setor').textContent = d.setor;
+            document.getElementById('docAtual').textContent = d.docAtual;
+            document.getElementById('docProx').textContent = d.docProx;
+            document.getElementById('matAtual').textContent = d.matAtual;
+            document.getElementById('matProx').textContent = d.matProx;
+
+            // Se a mudança veio de OUTRO dispositivo, este fala também
+            if (d.senha !== "--" && d.senha !== ultimaSenhaFada) {
+                document.getElementById('tindon').play().catch(() => {});
+                falar(`Senha número ${d.senha}, setor ${d.setor}`);
+                ultimaSenhaFada = d.senha;
+            }
+        }
+    });
+
+    // Eventos de clique único (Fim do delay)
+    document.getElementById('btnDoc').addEventListener('mousedown', (e) => { e.preventDefault(); chamar('DOCUMENTACAO'); });
+    document.getElementById('btnMat').addEventListener('mousedown', (e) => { e.preventDefault(); chamar('MATRICULA'); });
+    
+    document.getElementById('btnReset').addEventListener('click', async () => {
+        if (confirm("Deseja redefinir todas as senhas?")) {
+            ultimaSenhaFada = null;
+            await set(estadoRef, { docAtual: "--", docProx: 1, matAtual: "--", matProx: 1, senha: "--", setor: "AGUARDANDO" });
+        }
+    });
+
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'F1') { e.preventDefault(); chamar('DOCUMENTACAO'); }
+        if (e.key === 'F2') { e.preventDefault(); chamar('MATRICULA'); }
+        if (e.key === 'F3') { e.preventDefault(); document.getElementById('btnReset').click(); }
+    });
+</script>
+</body>
+</html>
