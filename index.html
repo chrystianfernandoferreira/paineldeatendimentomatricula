@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Painel ETEC - Resposta Instantânea</title>
     <style>
-        /* Ajuste de box-sizing e fluidez */
+        /* CSS ORIGINAL MANTIDO INTEGRALMENTE */
         * { box-sizing: border-box; margin: 0; padding: 0; opacity: 1 !important; }
         
         body, html {
@@ -14,7 +14,6 @@
             background: #111827;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             color: #ffffff; 
-            /* Permitir rolagem apenas se o conteúdo exceder a tela em dispositivos pequenos */
             overflow-x: hidden;
             overflow-y: auto; 
         }
@@ -23,7 +22,6 @@
             display: flex; 
             flex-direction: column; 
             width: 100vw; 
-            /* Use min-height para evitar que o conteúdo seja cortado em telas baixas */
             min-height: 100vh; 
             background: linear-gradient(135deg, #7f1d1d, #1f2937);
         }
@@ -67,7 +65,6 @@
             min-height: 0; 
         }
 
-        /* Responsividade para celular em pé ou telas estreitas */
         @media (max-width: 768px), (orientation: portrait) { 
             .content { flex-direction: column; } 
             .senha-principal { margin: 2vh 0; }
@@ -105,7 +102,7 @@
             padding: 3vmin;
             display: flex; 
             justify-content: center; 
-            flex-wrap: wrap; /* Garante que os botões pulem de linha se não couberem */
+            flex-wrap: wrap; 
             gap: 2vmin;
         }
 
@@ -118,7 +115,6 @@
             font-weight: bold; 
             box-shadow: 0 4px 0px rgba(0,0,0,0.3);
             transition: transform 0.05s;
-            /* Garante que o botão não fique esmagado em telas pequenas */
             min-width: 140px; 
             flex: 1; 
             max-width: 300px;
@@ -156,7 +152,7 @@
             <div class="info">Próxima: <strong id="docProx">1</strong></div>
         </div>
 
-        <div class="section">
+            <div class="section">
             <h2>MATRÍCULA</h2>
             <div class="info">Atendendo: <strong id="matAtual">--</strong></div>
             <div class="info">Próxima: <strong id="matProx">1</strong></div>
@@ -176,7 +172,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, set, onValue, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, set, onValue, get, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCfaPNHgxrem88R7x8dKD9j2SzTYPm9v10",
@@ -191,21 +187,21 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const estadoRef = ref(db, "estado");
-    let ultimaSenhaFada = null;
+    
+    // Variável para controle de sincronização de áudio
+    let lastProcessedTimestamp = 0;
 
     function falar(texto) {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel(); 
             const msg = new SpeechSynthesisUtterance(texto);
             msg.lang = "pt-BR";
-            msg.rate = 1.0;
+            msg.rate = 1.1; // Levemente mais rápido para parecer mais instantâneo
             window.speechSynthesis.speak(msg);
         }
     }
 
     async function chamar(tipo) {
-        document.getElementById('tindon').play().catch(() => {});
-        
         const snap = await get(estadoRef);
         let e = snap.exists() ? snap.val() : { docAtual: "--", docProx: 1, matAtual: "--", matProx: 1, senha: "--", setor: "AGUARDANDO" };
 
@@ -221,17 +217,19 @@
             e.setor = "MATRÍCULA";
         }
         
-        ultimaSenhaFada = e.senha; 
-        document.getElementById('senha').textContent = e.senha;
-        document.getElementById('setor').textContent = e.setor;
-        falar(`Senha número ${e.senha}, setor ${e.setor}`);
+        // Adiciona um carimbo de tempo do servidor para gatilho de áudio
+        e.timestamp = Date.now(); 
         
+        // Atualiza o Firebase - O evento onValue cuidará de disparar o som em todos ao mesmo tempo
         await set(estadoRef, e);
     }
 
+    // Escuta mudanças em tempo real
     onValue(estadoRef, snap => {
         if (snap.exists()) {
             const d = snap.val();
+            
+            // Atualização visual
             document.getElementById('senha').textContent = d.senha;
             document.getElementById('setor').textContent = d.setor;
             document.getElementById('docAtual').textContent = d.docAtual;
@@ -239,21 +237,41 @@
             document.getElementById('matAtual').textContent = d.matAtual;
             document.getElementById('matProx').textContent = d.matProx;
 
-            if (d.senha !== "--" && d.senha !== ultimaSenhaFada) {
-                document.getElementById('tindon').play().catch(() => {});
-                falar(`Senha número ${d.senha}, setor ${d.setor}`);
-                ultimaSenhaFada = d.senha;
+            // Lógica de áudio instantâneo sincronizado
+            if (d.timestamp && d.timestamp > lastProcessedTimestamp) {
+                lastProcessedTimestamp = d.timestamp;
+                
+                // Toca o sino
+                const som = document.getElementById('tindon');
+                som.currentTime = 0;
+                som.play().catch(() => {
+                    console.log("Interação necessária para habilitar áudio.");
+                });
+
+                // Chama a voz
+                if (d.senha !== "--") {
+                    falar(`Senha número ${d.senha}, setor ${d.setor}`);
+                }
             }
         }
     });
 
-    document.getElementById('btnDoc').addEventListener('mousedown', (e) => { e.preventDefault(); chamar('DOCUMENTACAO'); });
-    document.getElementById('btnMat').addEventListener('mousedown', (e) => { e.preventDefault(); chamar('MATRICULA'); });
+    // Eventos
+    document.getElementById('btnDoc').addEventListener('click', (e) => { chamar('DOCUMENTACAO'); });
+    document.getElementById('btnMat').addEventListener('click', (e) => { chamar('MATRICULA'); });
     
     document.getElementById('btnReset').addEventListener('click', async () => {
         if (confirm("Deseja redefinir todas as senhas?")) {
-            ultimaSenhaFada = null;
-            await set(estadoRef, { docAtual: "--", docProx: 1, matAtual: "--", matProx: 1, senha: "--", setor: "AGUARDANDO" });
+            lastProcessedTimestamp = Date.now();
+            await set(estadoRef, { 
+                docAtual: "--", 
+                docProx: 1, 
+                matAtual: "--", 
+                matProx: 1, 
+                senha: "--", 
+                setor: "AGUARDANDO",
+                timestamp: Date.now() 
+            });
         }
     });
 
