@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Painel ETEC - Visualização Focada</title>
+    <title>Painel ETEC - Harmonia Visual</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
@@ -20,92 +20,96 @@
             overflow: hidden;
         }
 
-        /* CABEÇALHO AMPLIADO */
+        /* HEADER */
         .header { 
-            flex: 1; /* Agora o cabeçalho cresce para ocupar o máximo de espaço */
+            flex: 1.2; 
             background: #991b1b; 
             text-align: center; 
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 2vh; 
-            border-bottom: 8px solid #fde047; 
+            display: flex; flex-direction: column; justify-content: center;
+            padding: 1vh 2vw; 
+            border-bottom: 6px solid #fde047; 
         }
 
-        /* IGUALANDO OS TAMANHOS DOS TÍTULOS */
+        /* TÍTULOS PADRONIZADOS (SENHA EM ATENDIMENTO = DOCUMENTAÇÃO = MATRÍCULA) */
         .header h1, .section h2 { 
-            font-size: clamp(1.5rem, 6vh, 4rem); /* Mesma escala para ambos */
+            font-size: clamp(1.1rem, 5vh, 3.5rem); 
             text-transform: uppercase; 
             font-weight: 900; 
             letter-spacing: 1px;
+            line-height: 1.2;
         }
 
         .senha-principal { 
-            font-size: clamp(6rem, 40vh, 30rem); /* Senha ainda maior */
+            font-size: clamp(4rem, 32vh, 25rem); 
             font-weight: 900; color: #fde047; 
-            line-height: 0.8; 
-            text-shadow: 8px 8px 0px rgba(0,0,0,0.5); 
+            line-height: 0.8; margin: 0.5vh 0;
+            text-shadow: 5px 5px 0px rgba(0,0,0,0.5); 
         }
 
         .setor-principal { 
-            font-size: clamp(1.5rem, 8vh, 6rem); 
-            font-weight: 800; 
-            text-transform: uppercase; 
-            color: #ffffff;
+            font-size: clamp(1.2rem, 7vh, 5rem); 
+            font-weight: 800; text-transform: uppercase; 
         }
 
-        /* ÁREA DOS RETÂNGULOS ACHATADOS */
+        /* RETÂNGULOS ACHATADOS E TEXTOS INTERNOS IGUALADOS */
         .content { 
-            flex: 0 0 auto; /* Não permite que esta área cresça sozinha */
-            height: 25vh; /* Define uma altura fixa menor (achatada) */
-            display: flex; 
-            gap: 2vmin; 
-            padding: 2vmin; 
+            flex: 0 0 auto; 
+            height: 22vh; /* Altura achatada */
+            display: flex; gap: 1.5vmin; padding: 1.5vmin; 
         }
 
         .section { 
-            flex: 1; 
-            background: #f3f4f6; 
-            color: #000; 
-            border-radius: 15px; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
+            flex: 1; background: #f3f4f6; color: #000; border-radius: 12px; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
             padding: 1vh;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
         }
 
+        /* Textos Internos (Atendendo e Próxima agora com a mesma escala) */
         .info { 
-            font-size: clamp(1rem, 4vh, 2.2rem); 
+            font-size: clamp(0.9rem, 3.8vh, 2.2rem); 
             font-weight: bold; 
+            white-space: nowrap;
         }
         .info strong { color: #991b1b; }
 
-        /* CONTROLES E RODAPÉ */
-        .controls { background: #020617; padding: 1.5vh; display: flex; flex-wrap: wrap; gap: 1vh; }
-        button {
-            font-size: clamp(0.7rem, 2vh, 1.2rem); 
-            padding: 1.5vh; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; 
-            flex: 1; min-width: 120px; text-transform: none;
+        /* CONTROLES RESPONSIVOS (Anti-Corte) */
+        .controls { 
+            flex: 0 0 auto; background: #020617; 
+            padding: 1.5vh; display: flex; flex-wrap: wrap; gap: 1vh; 
         }
+
+        button {
+            /* Fonte do botão diminui para caber em qualquer tela */
+            font-size: clamp(0.65rem, 2vh, 1.2rem); 
+            padding: 1.5vh 1vw; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; 
+            flex: 1; min-width: 100px; 
+            display: flex; align-items: center; justify-content: center;
+            text-transform: none; transition: transform 0.05s;
+        }
+        button:active { transform: scale(0.95); }
+
         .doc { background: #dc2626; color: #fff; }
         .mat { background: #334155; color: #fff; }
         .reset { background: #f59e0b; color: #000; }
 
         .footer { 
-            background: #000; text-align: center; padding: 1vh; 
-            font-weight: 900; font-size: clamp(0.6rem, 1.5vh, 1rem); 
+            flex: 0 0 auto; background: #000; text-align: center; 
+            padding: 1vh; font-weight: 900; 
+            font-size: clamp(0.5rem, 1.6vh, 0.9rem); 
             color: #ffffff; border-top: 1px solid #334155;
         }
 
-        /* Responsividade para Celulares */
-        @media (max-width: 768px) and (orientation: portrait) { 
+        /* Ajustes específicos para Celular em pé (Portrait) */
+        @media (max-width: 600px) and (orientation: portrait) {
             .header { flex: 2; }
-            .content { height: 35vh; flex-direction: column; } 
-            .senha-principal { font-size: 25vh; }
+            .content { height: 32vh; flex-direction: column; }
+            .senha-principal { font-size: 22vh; }
+            .section h2 { font-size: 2.8vh; }
+            .info { font-size: 2.4vh; }
+            button { min-width: 45%; } /* Botões em grade 2x2 no celular */
         }
 
+        /* Animação */
         .piscar { animation: flash 0.6s ease-in-out 3; }
         @keyframes flash {
             0%, 100% { opacity: 1; transform: scale(1); }
@@ -146,7 +150,6 @@
 <audio id="tindon" src="https://actions.google.com/sounds/v1/alarms/airport_chime.ogg" preload="auto"></audio>
 
 <script type="module">
-    // ... O código JavaScript permanece o mesmo para garantir a funcionalidade em tempo real ...
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, set, onValue, get, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
