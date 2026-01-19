@@ -5,135 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Painel ETEC - Resposta Instantânea</title>
     <style>
-        /* CSS ORIGINAL MANTIDO INTEGRALMENTE */
-        * { box-sizing: border-box; margin: 0; padding: 0; opacity: 1 !important; }
-        
+        /* CSS MANTIDO CONFORME SOLICITAÇÃO DE CENTRALIZAÇÃO E RESPONSIVIDADE */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body, html {
-            width: 100%; 
-            min-height: 100%; 
-            background: #111827;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            color: #ffffff; 
-            overflow-x: hidden;
-            overflow-y: auto; 
+            width: 100%; height: 100%; background: #020617;
+            display: flex; justify-content: center; align-items: center;
+            font-family: 'Segoe UI', Roboto, sans-serif; color: #ffffff; overflow: hidden;
         }
-
         .screen {
-            display: flex; 
-            flex-direction: column; 
-            width: 100vw; 
-            min-height: 100vh; 
+            display: flex; flex-direction: column; width: 96vw; height: 96vh;
             background: linear-gradient(135deg, #7f1d1d, #1f2937);
+            border-radius: 20px; overflow: hidden; box-shadow: 0 0 50px rgba(0,0,0,0.8);
         }
-
-        .header {
-            flex: 0 0 auto; 
-            background: #991b1b; 
-            text-align: center; 
-            padding: 2.5vmin;
-            border-bottom: 5px solid #fde047;
-        }
-
-        .header h1 { 
-            font-size: clamp(1.5rem, 5vh, 4rem); 
-            text-transform: uppercase; 
-            letter-spacing: 2px;
-            font-weight: 900; 
-            color: #ffffff;
-        }
-        
-        .senha-principal { 
-            font-size: clamp(4rem, 25vh, 20rem); 
-            font-weight: 900; 
-            color: #fde047; 
-            line-height: 1; 
-            margin: 1vh 0;
-            text-shadow: 4px 4px 0px rgba(0,0,0,0.5);
-        }
-
-        .setor-principal { 
-            font-size: clamp(1.2rem, 6vh, 5rem); 
-            font-weight: bold; 
-            padding-bottom: 10px;
-        }
-
-        .content { 
-            flex: 1; 
-            display: flex; 
-            gap: 2vmin; 
-            padding: 2vmin; 
-            min-height: 0; 
-        }
-
-        @media (max-width: 768px), (orientation: portrait) { 
-            .content { flex-direction: column; } 
-            .senha-principal { margin: 2vh 0; }
-        }
-
-        .section {
-            flex: 1; 
-            background: #f3f4f6; 
-            color: #000000;
-            border-radius: 25px; 
-            display: flex; 
-            flex-direction: column;
-            justify-content: center; 
-            align-items: center; 
-            text-align: center;
-            padding: 3vmin; 
-            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
-        }
-
-        .section h2 { 
-            font-size: clamp(1.1rem, 4vh, 2.5rem); 
-            color: #7f1d1d; 
-            margin-bottom: 1vh; 
-            text-transform: uppercase; 
-            font-weight: 800;
-        }
-        
-        .info { 
-            font-size: clamp(1rem, 3.5vh, 2.2rem); 
-            font-weight: bold; 
-        }
-
-        .controls {
-            background: #020617; 
-            padding: 3vmin;
-            display: flex; 
-            justify-content: center; 
-            flex-wrap: wrap; 
-            gap: 2vmin;
-        }
-
-        button {
-            font-size: clamp(0.85rem, 2.5vh, 1.6rem);
-            padding: 2vh 4vw; 
-            border: none; 
-            border-radius: 12px;
-            cursor: pointer; 
-            font-weight: bold; 
-            box-shadow: 0 4px 0px rgba(0,0,0,0.3);
-            transition: transform 0.05s;
-            min-width: 140px; 
-            flex: 1; 
-            max-width: 300px;
-        }
-        button:active { transform: scale(0.92); }
-
-        .doc { background: #dc2626; color: #ffffff; }
-        .mat { background: #334155; color: #ffffff; }
-        .reset { background: #f59e0b; color: #000000; }
-
-        .footer {
-            background: #020617; 
-            text-align: center; 
-            padding: 2vh;
-            font-size: clamp(0.7rem, 2vh, 1.2rem); 
-            color: #ffffff;
-            border-top: 2px solid #1f2937; 
-            font-weight: 700; 
-        }
+        .header { flex: 0 0 auto; background: #991b1b; text-align: center; padding: 2vh; border-bottom: 5px solid #fde047; }
+        .header h1 { font-size: clamp(1.2rem, 4vh, 3rem); text-transform: uppercase; font-weight: 900; }
+        .senha-principal { font-size: clamp(3.5rem, 22vh, 18rem); font-weight: 900; color: #fde047; line-height: 1; margin: 0.5vh 0; text-shadow: 4px 4px 0px rgba(0,0,0,0.5); }
+        .setor-principal { font-size: clamp(1.1rem, 5vh, 4.5rem); font-weight: bold; }
+        .content { flex: 1; display: flex; gap: 2vmin; padding: 2vmin; align-items: stretch; }
+        @media (max-width: 768px) or (orientation: portrait) { .content { flex-direction: column; } .screen { width: 98vw; height: 98vh; } }
+        .section { flex: 1; background: #f3f4f6; color: #000; border-radius: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2vmin; }
+        .section h2 { font-size: clamp(1rem, 3.5vh, 2rem); color: #7f1d1d; text-transform: uppercase; font-weight: 800; }
+        .info { font-size: clamp(0.9rem, 3vh, 1.8rem); font-weight: bold; }
+        .controls { background: #020617; padding: 2vmin; display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5vmin; }
+        button { font-size: clamp(0.8rem, 2.2vh, 1.4rem); padding: 1.5vh 3vw; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; flex: 1; min-width: 120px; transition: transform 0.05s; }
+        button:active { transform: scale(0.95); }
+        .doc { background: #dc2626; color: #fff; }
+        .mat { background: #334155; color: #fff; }
+        .reset { background: #f59e0b; color: #000; }
+        .footer { background: #020617; text-align: center; padding: 1.5vh; font-size: clamp(0.6rem, 1.8vh, 1rem); border-top: 1px solid #1f2937; }
     </style>
 </head>
 <body>
@@ -151,8 +50,7 @@
             <div class="info">Atendendo: <strong id="docAtual">--</strong></div>
             <div class="info">Próxima: <strong id="docProx">1</strong></div>
         </div>
-
-            <div class="section">
+        <div class="section">
             <h2>MATRÍCULA</h2>
             <div class="info">Atendendo: <strong id="matAtual">--</strong></div>
             <div class="info">Próxima: <strong id="matProx">1</strong></div>
@@ -164,7 +62,6 @@
         <button class="mat" id="btnMat">📝 Matrícula (F2)</button>
         <button class="reset" id="btnReset">🔄 Redefinir (F3)</button>
     </div>
-
     <div class="footer">Etec Sylvio de Mattos Carvalho • Centro Paula Souza</div>
 </div>
 
@@ -172,7 +69,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, set, onValue, get, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, set, onValue, get, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCfaPNHgxrem88R7x8dKD9j2SzTYPm9v10",
@@ -188,98 +85,88 @@
     const db = getDatabase(app);
     const estadoRef = ref(db, "estado");
     
-    // Variável para controle de sincronização de áudio
-    let lastProcessedTimestamp = 0;
+    // Controle rigoroso de sincronia para evitar falhas de execução repetida ou atrasada
+    let ultimoTimestampProcessado = 0;
 
-    function falar(texto) {
+    function executarChamadaVoz(senha, setor) {
+        // 1. Toca o sino instantaneamente
+        const audio = document.getElementById('tindon');
+        audio.pause();
+        audio.currentTime = 0;
+        audio.play().catch(e => console.warn("Áudio requer interação prévia."));
+
+        // 2. Executa a voz (synthesis)
         if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel(); 
-            const msg = new SpeechSynthesisUtterance(texto);
-            msg.lang = "pt-BR";
-            msg.rate = 1.1; // Levemente mais rápido para parecer mais instantâneo
-            window.speechSynthesis.speak(msg);
+            window.speechSynthesis.cancel(); // Para qualquer fala anterior imediatamente
+            const frase = new SpeechSynthesisUtterance(`Senha número ${senha}, setor ${setor}`);
+            frase.lang = "pt-BR";
+            frase.rate = 1.1; // Velocidade ideal para clareza e agilidade
+            frase.pitch = 1.0;
+            window.speechSynthesis.speak(frase);
         }
     }
 
-    async function chamar(tipo) {
+    async function incrementarSenha(tipo) {
         const snap = await get(estadoRef);
-        let e = snap.exists() ? snap.val() : { docAtual: "--", docProx: 1, matAtual: "--", matProx: 1, senha: "--", setor: "AGUARDANDO" };
+        let d = snap.exists() ? snap.val() : { docAtual: "--", docProx: 1, matAtual: "--", matProx: 1 };
 
+        let updates = {};
         if (tipo === "DOCUMENTACAO") {
-            e.docAtual = e.docProx;
-            e.senha = e.docProx;
-            e.docProx++;
-            e.setor = "DOCUMENTAÇÃO";
+            updates['docAtual'] = d.docProx;
+            updates['senha'] = d.docProx;
+            updates['docProx'] = d.docProx + 1;
+            updates['setor'] = "DOCUMENTAÇÃO";
         } else {
-            e.matAtual = e.matProx;
-            e.senha = e.matProx;
-            e.matProx++;
-            e.setor = "MATRÍCULA";
+            updates['matAtual'] = d.matProx;
+            updates['senha'] = d.matProx;
+            updates['matProx'] = d.matProx + 1;
+            updates['setor'] = "MATRÍCULA";
         }
         
-        // Adiciona um carimbo de tempo do servidor para gatilho de áudio
-        e.timestamp = Date.now(); 
+        // O segredo do tempo real: enviamos o timestamp exato do sistema
+        updates['trigger'] = Date.now();
         
-        // Atualiza o Firebase - O evento onValue cuidará de disparar o som em todos ao mesmo tempo
-        await set(estadoRef, e);
+        await update(estadoRef, updates);
     }
 
-    // Escuta mudanças em tempo real
-    onValue(estadoRef, snap => {
-        if (snap.exists()) {
-            const d = snap.val();
-            
-            // Atualização visual
-            document.getElementById('senha').textContent = d.senha;
-            document.getElementById('setor').textContent = d.setor;
-            document.getElementById('docAtual').textContent = d.docAtual;
-            document.getElementById('docProx').textContent = d.docProx;
-            document.getElementById('matAtual').textContent = d.matAtual;
-            document.getElementById('matProx').textContent = d.matProx;
+    // LISTENER EM TEMPO REAL (Dispara em todos os dispositivos simultaneamente)
+    onValue(estadoRef, (snap) => {
+        if (!snap.exists()) return;
+        const dados = snap.val();
 
-            // Lógica de áudio instantâneo sincronizado
-            if (d.timestamp && d.timestamp > lastProcessedTimestamp) {
-                lastProcessedTimestamp = d.timestamp;
-                
-                // Toca o sino
-                const som = document.getElementById('tindon');
-                som.currentTime = 0;
-                som.play().catch(() => {
-                    console.log("Interação necessária para habilitar áudio.");
-                });
+        // Atualiza a interface visual
+        document.getElementById('senha').textContent = dados.senha || "--";
+        document.getElementById('setor').textContent = dados.setor || "AGUARDANDO";
+        document.getElementById('docAtual').textContent = dados.docAtual || "--";
+        document.getElementById('docProx').textContent = dados.docProx || "1";
+        document.getElementById('matAtual').textContent = dados.matAtual || "--";
+        document.getElementById('matProx').textContent = dados.matProx || "1";
 
-                // Chama a voz
-                if (d.senha !== "--") {
-                    falar(`Senha número ${d.senha}, setor ${d.setor}`);
-                }
+        // Verifica o gatilho de áudio
+        if (dados.trigger && dados.trigger > ultimoTimestampProcessado) {
+            ultimoTimestampProcessado = dados.trigger;
+            if (dados.senha && dados.senha !== "--") {
+                executarChamadaVoz(dados.senha, dados.setor);
             }
         }
     });
 
-    // Eventos
-    document.getElementById('btnDoc').addEventListener('click', (e) => { chamar('DOCUMENTACAO'); });
-    document.getElementById('btnMat').addEventListener('click', (e) => { chamar('MATRICULA'); });
-    
-    document.getElementById('btnReset').addEventListener('click', async () => {
-        if (confirm("Deseja redefinir todas as senhas?")) {
-            lastProcessedTimestamp = Date.now();
-            await set(estadoRef, { 
-                docAtual: "--", 
-                docProx: 1, 
-                matAtual: "--", 
-                matProx: 1, 
-                senha: "--", 
-                setor: "AGUARDANDO",
-                timestamp: Date.now() 
-            });
+    // Eventos de clique
+    document.getElementById('btnDoc').onclick = () => incrementarSenha("DOCUMENTACAO");
+    document.getElementById('btnMat').onclick = () => incrementarSenha("MATRICULA");
+    document.getElementById('btnReset').onclick = async () => {
+        if (confirm("Redefinir painel?")) {
+            await set(estadoRef, { docAtual: "--", docProx: 1, matAtual: "--", matProx: 1, senha: "--", setor: "AGUARDANDO", trigger: 0 });
+            window.location.reload();
         }
-    });
+    };
 
-    window.addEventListener('keydown', (e) => {
-        if (e.key === 'F1') { e.preventDefault(); chamar('DOCUMENTACAO'); }
-        if (e.key === 'F2') { e.preventDefault(); chamar('MATRICULA'); }
+    // Atalhos de teclado
+    window.onkeydown = (e) => {
+        if (e.key === 'F1') { e.preventDefault(); incrementarSenha("DOCUMENTACAO"); }
+        if (e.key === 'F2') { e.preventDefault(); incrementarSenha("MATRICULA"); }
         if (e.key === 'F3') { e.preventDefault(); document.getElementById('btnReset').click(); }
-    });
+    };
 </script>
 </body>
 </html>
