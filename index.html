@@ -22,7 +22,6 @@
         .header { flex: 0 0 auto; background: #991b1b; text-align: center; padding: 2vh; border-bottom: 5px solid #fde047; }
         .header h1 { font-size: clamp(1.2rem, 4vh, 3rem); text-transform: uppercase; font-weight: 900; }
         
-        /* ANIMAÇÃO DA SENHA */
         .senha-principal { 
             font-size: clamp(3.5rem, 22vh, 18rem); 
             font-weight: 900; color: #fde047; 
@@ -30,9 +29,8 @@
             text-shadow: 4px 4px 0px rgba(0,0,0,0.5); 
         }
 
-        /* Classe para o efeito de piscar */
         .piscar {
-            animation: flash 0.8s ease-in-out 3; /* Pisca 3 vezes */
+            animation: flash 0.8s ease-in-out 3;
         }
 
         @keyframes flash {
@@ -62,7 +60,7 @@
             flex: 1; min-width: 110px; transition: transform 0.05s;
             display: flex; align-items: center; justify-content: center;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-            text-transform: uppercase;
+            text-transform: none; 
         }
         button:active { transform: scale(0.95); }
 
@@ -86,7 +84,7 @@
 
 <div class="screen">
     <div class="header">
-        <h1>SENHA EM ATENDIMENTO</h1>
+        <h1>SENHA EM ATENDIMENTO:</h1>
         <div class="senha-principal" id="senha">--</div>
         <div class="setor-principal" id="setor">AGUARDANDO</div>
     </div>
@@ -135,13 +133,11 @@
     let ultimoTimestampProcessado = 0;
 
     function executarChamadaVoz(senha, setor) {
-        // Efeito Visual de Piscar
         const elSenha = document.getElementById('senha');
         elSenha.classList.remove('piscar');
-        void elSenha.offsetWidth; // Force reflow para reiniciar animação
+        void elSenha.offsetWidth; 
         elSenha.classList.add('piscar');
 
-        // Áudio
         const audio = document.getElementById('tindon');
         audio.pause();
         audio.currentTime = 0;
